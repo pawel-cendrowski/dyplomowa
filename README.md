@@ -6,8 +6,7 @@ Album 7386
 
 Warszawska Wyższa Szkoła Informatyki
 
-
-## Temat: "Implementacja aplikacji internetowej w środowisku kontenerowym"
+## Temat: "Implementacja wielowarstwowej aplikacji internetowej w środowisku kontenerowym"
 
 Zakres pracy:
 
@@ -16,9 +15,6 @@ Zakres pracy:
 3. Implementacja logiki aplikacji i renderowania w frameworku Next.js
 4. Integracja treści z wykorzystaniem Headless CMS Strapi
 5. Automatyzacja procesów wdrożeniowych
-
-
-
 
 ## Skrypty automatyczne
 
@@ -57,3 +53,17 @@ npm run clean
 ## Informacja
 
 Uruchomienie skryptu deploy:dev lub deploy:prod wykonuje skrypt regenerujący bazę danych na podstawie pliku backup.sql zawartego w katalogu 'database/dbstrapi/backup/backup.sql'
+
+## Wymagania
+
+Linux:
+ - npm
+ - node
+ - docker
+ - distro: ubuntu
+
+Windows:
+ - npm
+ - node
+ - docker
+ - wsl / virtualbox + linux ubuntu

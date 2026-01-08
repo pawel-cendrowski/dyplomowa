@@ -29,7 +29,6 @@ services:
         environment:
             PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL}
             PRIVATE_STRAPI_URL: ${PRIVATE_STRAPI_URL}
-            REVALIDATION_TOKEN: ${REVALIDATION_TOKEN}
         depends_on:
             srv-strapi:
                 condition: service_healthy
