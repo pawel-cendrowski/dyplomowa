@@ -1,0 +1,7 @@
+.header{
+    height:50px;
+    display:flex;
+    flex-shrink:0;
+    width:100%;
+    justify-content: flex-end; /* space-between dla menu + logo */
+}

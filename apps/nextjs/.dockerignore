@@ -1,0 +1,7 @@
+node_modules
+.gitignore
+Dockerfile
+Dockerfile.prod
+dist
+.next
+eslint.config.mjs

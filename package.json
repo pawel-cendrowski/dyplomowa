@@ -1,0 +1,27 @@
+{
+  "name": "dyplomowa-root",
+  "version": "1.0.0",
+  "scripts": {
+    " --- CORE --- ": "",
+
+    "deploy:dev": "bash ./scripts/deploy-dev.sh",
+    "deploy:prod": "bash ./scripts/deploy-prod.sh",
+
+    "stop:dev": "docker compose -f docker-compose.dev.yaml down",
+    "stop:prod": "docker compose -f docker-compose.prod.yaml down",
+
+    "clean": "docker system prune -a -f",
+
+    " --- TOOLS --- ": "",
+
+    "ssl:generate": "bash ./scripts/ssl-generate.sh",
+    "db:backup-make": "bash ./scripts/db-backup-make.sh",
+    "db:backup-restore": "bash ./scripts/db-backup-restore.sh"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "author": "Paweł Cendrowski",
+  "license": "UNLICENSED",
+  "private": true
+}

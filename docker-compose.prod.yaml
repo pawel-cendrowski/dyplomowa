@@ -1,0 +1,91 @@
+services:
+    srv-nginx:
+        container_name: srv-nginx
+        build:
+            context: ./apps/nginx
+            dockerfile: Dockerfile
+        image: img-srv-nginx
+        networks:
+            - net-public
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./apps/public_html:/var/www/html
+            - ./ssl:/etc/ssl/dyplomowa:ro
+        depends_on:
+            - srv-strapi
+            - srv-nextjs
+    srv-nextjs:
+        container_name: srv-nextjs
+        build:
+            context: ./apps/nextjs
+            dockerfile: Dockerfile.prod
+        image: img-srv-nextjs
+        networks:
+            - net-public
+        # volumes:
+        #     - ./apps/nextjs:/app
+        environment:
+            PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL}
+            PRIVATE_STRAPI_URL: ${PRIVATE_STRAPI_URL}
+            REVALIDATION_TOKEN: ${REVALIDATION_TOKEN}
+        depends_on:
+            srv-strapi:
+                condition: service_healthy
+    srv-strapi:
+        container_name: srv-strapi
+        build:
+            context: ./apps/strapi
+            dockerfile: Dockerfile.prod
+        image: img-srv-strapi
+        networks:
+            - net-public
+            - net-private
+        volumes:
+         - ./uploads:/app/public/uploads
+        #     - ./apps/strapi:/app
+        env_file:
+            - ./apps/strapi/.env
+        environment:
+            DATABASE_HOST: ${STRAPI_DATABASE_HOST}
+            DATABASE_NAME: ${STRAPI_POSTGRES_DB}
+            DATABASE_USERNAME: ${STRAPI_POSTGRES_USER}
+            DATABASE_PASSWORD: ${STRAPI_POSTGRES_PASSWORD}
+        depends_on:
+            - srv-strapi-db
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:1337/admin"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+    srv-strapi-db:
+        container_name: ${STRAPI_DATABASE_HOST}
+        build:
+            context: ./apps/database/dbstrapi
+            dockerfile: Dockerfile
+        image: img-db-srv
+        networks:
+            - net-private
+        volumes:
+            #- ./apps/database/dbstrapi/data:/var/lib/postgresql/data
+            - db-data:/var/lib/postgresql/data
+            - ./apps/database/dbstrapi/backup:/backup
+        environment:
+            POSTGRES_DB: ${STRAPI_POSTGRES_DB}
+            POSTGRES_USER: ${STRAPI_POSTGRES_USER}
+            POSTGRES_PASSWORD: ${STRAPI_POSTGRES_PASSWORD}
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "${STRAPI_POSTGRES_USER}", "-d", "${STRAPI_POSTGRES_DB}"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+            start_period: 5s
+networks:
+    net-public:
+        driver: bridge
+    net-private:
+        driver: bridge
+volumes:
+    db-data:
+        driver: local
